@@ -13,16 +13,16 @@ jobs:
     - name: Install Prerequisites
       run: Tools/environment_install/install-prereqs-ubuntu.sh -y
       
-    - name: Configure Board
-      run: ./waf configure --board CubeOrangePlus-bdshot
-      
-    - name: Build Firmware
-      run: ./waf sub
-      
+    - name: Configure and Build Firmware
+      run: |
+        export PATH=/opt/gcc-arm-none-eabi-10-2020-q4-major/bin:$PATH
+        export PATH=$HOME/.local/bin:$PATH
+        . ~/.profile
+        ./waf configure --board CubeOrangePlus-bdshot
+        ./waf sub
+        
     - name: Upload Firmware File
       uses: actions/upload-artifact@v4
       with:
         name: Custom-ArduSub-CubeOrangePlus-bdshot
         path: build/CubeOrangePlus-bdshot/bin/ardusub.apj
-
-         
