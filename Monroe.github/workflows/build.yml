@@ -1,0 +1,26 @@
+name: Build Custom ArduSub
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        submodules: 'recursive'
+        
+    - name: Install Prerequisites
+      run: Tools/environment_install/install-prereqs-ubuntu.sh -y
+      
+    - name: Configure Board
+      run: ./waf configure --board CubeOrangePlus
+      
+    - name: Build Firmware
+      run: ./waf sub
+      
+    - name: Upload Firmware File
+      uses: actions/upload-artifact@v4
+      with:
+        name: Custom-ArduSub-CubeOrangePlus
+        path: build/CubeOrangePlus/bin/ardusub.apj
